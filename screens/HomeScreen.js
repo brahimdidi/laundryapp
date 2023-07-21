@@ -1,7 +1,8 @@
-import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, SafeAreaView, StyleSheet, Text, View, Image, TextInput } from 'react-native'
 import React, { useEffect , useState } from 'react'
 import * as Location from 'expo-location';
 import { EvilIcons } from '@expo/vector-icons';
+import Carousel from '../components/Carousel';
 
 const HomeScreen = () => {
     const [displaycurrentAddress, setDisplaycurrentAddress] = useState('we are loading location');
@@ -63,14 +64,38 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView>
-        <View>
+      {/* location and profile  */}
+        <View style={{flexDirection: "row", alignItems: "center", padding: 10}}>
             <EvilIcons name="location" size={34} color="#fd5c63" />
             <View>
              <Text style={{fontSize: 23, fontWeight: "500"}}>Home</Text>
              <Text>{displaycurrentAddress}</Text>
             </View>
         </View>
-      <Text>HomeScreen</Text>
+        <Pressable 
+         style={{marginLeft: "auto", marginRight: 7}}
+         onPress={() => console.log("search pressed")}>
+            <Image
+              style={{width: 40, height: 40, borderRadius: 20}}
+              source={require('../assets/user.png')}
+             />
+        </Pressable>
+        {/* search bar */}
+        <View style={{
+          padding: 10, 
+          margin: 10,
+          flexDirection: "row",
+          alignItemsc: "center",
+          justifyContent: "space-between",
+          borderWidth: 0.9 ,
+          borderColor: "#c0c0c0",
+          borderRadius: 7,
+          }}>
+          <TextInput placeholder='search' />
+          <EvilIcons name="search" size={24} color="black" />
+         </View>
+     {/* carousel */}
+      <Carousel />
     </SafeAreaView>
   )
 }
