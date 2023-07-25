@@ -4,11 +4,20 @@ import HomeScreen from './screens/HomeScreen';
 
 const App = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <HomeScreen />
       <StatusBar style="auto" />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container : {
+    flex: 1,
+    backgroundColor: '#f1f1f1',
+  }
+});
+
+
 
 export default App;
