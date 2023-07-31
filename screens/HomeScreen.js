@@ -5,57 +5,18 @@ import { EvilIcons } from '@expo/vector-icons';
 import Carousel from '../components/Carousel';
 import Services from '../components/Services';
 import Product from '../components/Product';
+import { services } from '../data/data';
+import { useDispatch, useSelector } from 'react-redux';
+import { setProducts } from '../redux/ProductReducer';
 
 const HomeScreen = () => {
-  // mock data
-  const products = [
-    {
-      id: 1,
-      name: "T-shirt",
-      img: "https://source.unsplash.com/featured/300x269",
-      price: 20,
-    },
-    {
-      id: 2,
-      name: "shoes",
-      img: "https://source.unsplash.com/featured/300x270",
-      price: 25,
-    },
-    {
-      id: 3,
-      name: "jeans",
-      img: "https://source.unsplash.com/featured/300x271",
-      price: 15,
-    },
-    {
-      id: 4,
-      name: "jacket",
-      img: "https://source.unsplash.com/featured/300x272",
-      price: 15,
-    },
-    {
-      id: 5,
-      name: "cap",
-      img: "https://source.unsplash.com/featured/300x277 ",
-      price: 15,
-    },
-    {
-      id: 6,
-      name: "socks",
-      img: "https://source.unsplash.com/featured/300x274",
-      price: 15,
-    },
-    {
-      id: 7,
-      name: "shorts",
-      img: "https://source.unsplash.com/featured/300x275",
-      price: 15,
-    },
-
-  ];
-
+  const cart = useSelector(state => state.cart.cart); 
+  const dispatch = useDispatch();
+ 
+    const products = useSelector(state => state.product.product);
     const [displaycurrentAddress, setDisplaycurrentAddress] = useState('we are loading location');
     const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
+
 
     const checkIfLocationEnabled = async () => {
         let enabled = await Location.hasServicesEnabledAsync();
@@ -110,6 +71,11 @@ const HomeScreen = () => {
      getCurrentLocation();
     }, []);
 
+    useEffect(() => {
+      if (products.length > 0) return;
+      dispatch(setProducts(services));
+
+    }, []);
 
   return (
     <ScrollView style={{marginTop: 50 }}>
