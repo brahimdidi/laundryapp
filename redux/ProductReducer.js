@@ -9,6 +9,12 @@ export const productSlice = createSlice({
         setProducts: (state, action) => {
             state.product = action.payload;
         },
+        resetProductQuantity: (state, action) => {
+            const itemExist = state.product.find((item) => item.id === action.payload.id);
+            if (itemExist) {
+                itemExist.quantity = 0;
+            }
+        },
         incrementProductQuantity: (state, action) => {
             const itemExist = state.product.find((item) => item.id === action.payload.id);
             if (itemExist) {
@@ -29,5 +35,5 @@ export const productSlice = createSlice({
     },
 }); 
 
-export const { setProducts, incrementProductQuantity, decrementProductQuantity } = productSlice.actions;
+export const { setProducts, incrementProductQuantity, decrementProductQuantity , resetProductQuantity} = productSlice.actions;
 export default productSlice.reducer;
