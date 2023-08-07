@@ -6,13 +6,11 @@ import Store from './redux/Store';
 import StackNavigator from './StackNavigator';
 
 const App = () => {
+  
   return (
     <Provider store={Store}>
       <StackNavigator />
-      <View style={styles.container}>
-        <HomeScreen />
-        <StatusBar style="auto" /> 
-      </View>
+      <StatusBar style="auto" /> 
     </Provider>
   );
 };

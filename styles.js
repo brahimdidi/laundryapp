@@ -4,4 +4,5 @@ const colors = {
     inactiveDotColor : "#90A4AE"
 };
 
+
 export default colors;

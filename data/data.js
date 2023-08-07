@@ -3,7 +3,7 @@ export const services = [
       id: 1,
       name: "T-shirt",
       img: "https://source.unsplash.com/featured/300x269",
-      price: 20,
+      price: 120,
       quantity: 0,
     },
     {
