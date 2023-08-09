@@ -39,7 +39,7 @@ const CartScreen = () => {
         {total === 0 ? (
           <View
             style={{
-              justifyContent: "center",
+              marginTop: 100,
               alignItems: "center",
               height: "100%",
             }}
@@ -265,25 +265,27 @@ const CartScreen = () => {
           </>
         )}
       </SafeAreaView>
-      <Pressable style={styles.proceedToPickUpContainer}>
-        <View>
-          <Text style={styles.proceedToPickUpText}>
-            {cart.length} items | ${total}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "400",
-              color: "white",
-              marginVertical: 6,
-            }}
-          >
-            extra charges might apply
-          </Text>
-        </View>
+      {total > 0 && (
+        <Pressable style={styles.proceedToPickUpContainer}>
+          <View>
+            <Text style={styles.proceedToPickUpText}>
+              {cart.length} items | ${total}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "400",
+                color: "white",
+                marginVertical: 6,
+              }}
+            >
+              extra charges might apply
+            </Text>
+          </View>
 
-        <Text style={{ fontSize: 17, fontWeight: "600" }}>Place Order</Text>
-      </Pressable>
+          <Text style={{ fontSize: 17, fontWeight: "600" }}>Place Order</Text>
+        </Pressable>
+      )}
     </>
   );
 };

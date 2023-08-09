@@ -20,6 +20,7 @@ import { setProducts } from "../redux/ProductReducer";
 import { useNavigation } from "@react-navigation/core";
 
 const HomeScreen = () => {
+  console.log("HomeScreen");
   const cart = useSelector((state) => state.cart.cart);
   const total = cart.map((item) => item.price * item.quantity).reduce((a, b) => a + b, 0);
   const dispatch = useDispatch();
@@ -50,15 +51,19 @@ const HomeScreen = () => {
     console.log("getCurrentLocation");
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
+      setDisplaycurrentAddress("Permission to access location was denied");
       Alert.alert("Permission denied", "allow the app to use location", [
         {
           text: "Cancel",
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
+        { text: "OK", onPress: () => {
+          
+        } },
       ]);
-    }
+    };
+    
     let { coords } = await Location.getCurrentPositionAsync();
     console.log("coords", coords);
 
