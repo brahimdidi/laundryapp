@@ -10,6 +10,11 @@ export const productSlice = createSlice({
             state.product = action.payload;
         },
         resetProductQuantity: (state, action) => {
+            if (!action.payload) {
+               let products = state.product.map((item) => { item.quantity = 0; return item; });
+                state.product = products;
+                return;
+            }
             const itemExist = state.product.find((item) => item.id === action.payload.id);
             if (itemExist) {
                 itemExist.quantity = 0;
