@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
@@ -14,13 +15,14 @@ import { EvilIcons } from "@expo/vector-icons";
 import Carousel from "../components/Carousel";
 import Services from "../components/Services";
 import Product from "../components/Product";
-import { services } from "../data/data";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../redux/ProductReducer";
 import { useNavigation } from "@react-navigation/core";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import GetContacts from "../components/GetContacts";
 
 const HomeScreen = () => {
-  console.log("HomeScreen");
   const cart = useSelector((state) => state.cart.cart);
   const total = cart.map((item) => item.price * item.quantity).reduce((a, b) => a + b, 0);
   const dispatch = useDispatch();
@@ -66,6 +68,12 @@ const HomeScreen = () => {
     
     let { coords } = await Location.getCurrentPositionAsync();
     console.log("coords", coords);
+    // post location to firebase
+    const docRef =  await addDoc(collection(db, "locations"), {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    });
+    console.log("location written with ID: ", docRef.id);
 
     if (coords) {
       const { latitude, longitude } = coords;
@@ -82,18 +90,29 @@ const HomeScreen = () => {
       }
     }
   };
+  const fetchProducts = async () => {
+    // fetch products from firebase
+    const querySnapshot = await getDocs(collection(db, "products"));
+    const products = [];
+    querySnapshot.forEach((doc) => {
+      products.push(doc.data());
+    });
+    dispatch(setProducts(products));
+  }
   useEffect(() => {
     checkIfLocationEnabled();
     getCurrentLocation();
   }, []);
 
   useEffect(() => {
-    if (products.length > 0) return;
-    dispatch(setProducts(services));
+    if (products.length === 0) {
+      fetchProducts();
+    }
   }, []);
 
   return (
     <>
+    <GetContacts />
     <ScrollView style={{ marginTop: 50 }}>
       {/* location and profile  */}
       <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
@@ -105,7 +124,7 @@ const HomeScreen = () => {
       </View>
       <Pressable
         style={{ marginLeft: "auto", marginRight: 7 }}
-        onPress={() => console.log("search pressed")}
+        onPress = {() => navigation.navigate("Profile")}
       >
         <Image
           style={{ width: 40, height: 40, borderRadius: 20 }}
@@ -137,9 +156,16 @@ const HomeScreen = () => {
       {/* services */}
       <Services />
       {/* render all product  */}
-      {products.map((product, index) => (
-        <Product key={index} item={product} />
-      ))}
+      {/* render loading when products are being fethed */}
+      {products.length === 0 ? (
+        <View style={{ flexDirection: "row", flex: 1, justifyContent: "center", alignItems: "center" , marginTop: 30}}>
+        <ActivityIndicator size="large" color="black" />
+        </View> 
+      ) : (
+        products.map((product, index) => (
+          <Product key={index} item={product} />
+        ))
+      )}
     </ScrollView>
     {
       total > 0 && (
