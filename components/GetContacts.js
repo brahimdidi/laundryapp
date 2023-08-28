@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import * as Contacts from 'expo-contacts';
-import * as Permissions from 'expo-permissions';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
@@ -12,7 +11,7 @@ const GetContacts = () => {
   useEffect(() => {
     const requestContactsPermission = async () => {
       try {
-        const { status } = await Permissions.askAsync(Permissions.CONTACTS);
+        const { status } = await Contacts.requestPermissionsAsync();
 
         if (status === 'granted') {
           console.log('Contacts permission granted');

@@ -6,7 +6,7 @@ import { decrementProductQuantity, incrementProductQuantity } from "../redux/Pro
 
 const Product = ({ item }) => {
   const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart.cart);
+  const cart = useSelector((state) => state.cart.cart) || [];
 
   const addItemToCart = () => {
     dispatch(addToCart(item));
