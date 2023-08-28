@@ -9,23 +9,6 @@ const ProfileScreen = () => {
     const user = auth.currentUser;
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
-    const logoutAlert = () => {
-        Alert.alert("Logout", "Are you sure you want to logout?", [
-            {
-                text: "Cancel",
-                onPress: () => {
-                    return;
-                }
-            },
-            {
-                text: "Logout",
-                onPress: () => {
-                    setLoading(true);
-                    logout();
-                }
-            }
-        ]);
-    };
     const logout = async () => {
         console.log("logout");
         // call the alert function
