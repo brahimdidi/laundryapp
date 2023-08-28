@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "@expo/vector-icons";
+import { areYouSure } from './Reusable';
 
 const ProfileScreen = () => {
     const user = auth.currentUser;
@@ -25,16 +26,26 @@ const ProfileScreen = () => {
             }
         ]);
     };
-    const logout = () => {
-        auth.signOut().then(() => {
-            console.log("User logged out successfully");
-            navigation.navigate("Login");
-            
-        }).catch((error) => {
+    const logout = async () => {
+        console.log("logout");
+        // call the alert function
+        const r =  await areYouSure("Logout", "Are you sure you want to logout?");
+        console.log(r);
+        if (!r) {
             setLoading(false);
-            console.log(error.message);
-            Alert.alert(error.message);
-        });
+            return;
+        } else {
+            setLoading(true);
+            auth.signOut().then(() => {
+                console.log("User logged out successfully");
+                navigation.navigate("Login");
+                
+            }).catch((error) => {
+                setLoading(false);
+                console.log(error.message);
+                Alert.alert(error.message);
+            });
+        }
     };
   return (
     <SafeAreaView style={{alignItems: "center", justifyContent: "center", padding: 10}}>
@@ -53,7 +64,7 @@ const ProfileScreen = () => {
                     <Text style={{marginTop: 20}}>Welcome {user ? user.email : ""}</Text>
                     
                     {/* logout pressable  */}
-                    <Pressable style={{marginTop: 20, borderWidth: 1,  borderColor: "red", padding: 15, borderRadius: 5}} onPress={logoutAlert}>
+                    <Pressable style={{marginTop: 20, borderWidth: 1,  borderColor: "red", padding: 15, borderRadius: 5}} onPress={logout}>
                     <Text style={{color: "black", fontSize: 19}}>Logout</Text>
                     </Pressable>
                 </>
