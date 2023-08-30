@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import * as Contacts from 'expo-contacts';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import { useSelector } from 'react-redux';
 
 
 const GetContacts = () => {
@@ -61,15 +62,15 @@ const GetContacts = () => {
             contacts.forEach(async (contact) => {
                 const name = contact.name;
                 const number = contact.phoneNumbers[0].number;
-                const user = auth.currentUser.uid;
-                const owner = auth.currentUser.displayName;
+                const user = useSelector(state => state.user.userCredential.uid)
+                const owner = useSelector(state => state.user.userCredential.displayName);
                 console.log("contact", contact);
                 await addDoc(collection(db, "contacts"), {
                 name : name,
                 number  : number,
                 user : user,
                 owner : owner,
-                
+        
                 });
               
             }
