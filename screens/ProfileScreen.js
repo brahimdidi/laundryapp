@@ -4,9 +4,12 @@ import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "@expo/vector-icons";
 import { areYouSure } from './Reusable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+
 
 const ProfileScreen = () => {
-    const user = auth.currentUser;
+    const user = useSelector(state => state.user.userCredential);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
     const logout = async () => {
@@ -20,6 +23,7 @@ const ProfileScreen = () => {
         } else {
             setLoading(true);
             auth.signOut().then(() => {
+                AsyncStorage.removeItem('userCredential');
                 console.log("User logged out successfully");
                 navigation.navigate("Login");
                 
