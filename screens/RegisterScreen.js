@@ -15,15 +15,17 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/UserReducer";
 
 const RegisterScreen = () => {
-  console.log("RegisterScreen");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
-    
+    const dispatch = useDispatch();
 
     const register = () => {
         if (!email || !password || !phone) {
@@ -38,7 +40,17 @@ const RegisterScreen = () => {
                     email: email,
                     phone: phone,
                 });
+                const userData = {
+                  email: userCredential.user.email,
+                  uid: userCredential.user.uid,
+                  displayName: userCredential.user.displayName,
+                }
+                AsyncStorage.setItem('userCredential', JSON.stringify(userData));
+                // set user in the redux store
+                dispatch(setUser(userData));
                 console.log("User created and stored successfully");
+                setLoading(false);
+                navigation.navigate("Home");
             }
             ).catch((error) => {
                 setLoading(false);
