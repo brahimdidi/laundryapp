@@ -1,5 +1,5 @@
 {
-  "name": "laundryapp",
+  "name": "shoppingapp",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
