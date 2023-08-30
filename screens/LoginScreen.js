@@ -14,7 +14,16 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import {  signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/UserReducer";
+
+// Retrieving data
+
+
 const LoginScreen = () => {
+
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
@@ -26,31 +35,54 @@ const LoginScreen = () => {
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
       // Signed in 
-      console.log("User logged in successfully");
-
+      console.log("User logged in successfully from login function");
+      const userData = {
+        email: userCredential.user.email,
+        uid: userCredential.user.uid,
+        displayName: userCredential.user.displayName,
+      }
+      console.log(userData, 'this is user data');
+      AsyncStorage.setItem('userCredential', JSON.stringify(userData));
+      dispatch(setUser(userData));
+      setLoading(false);
+      navigation.navigate("Home");
     }).catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
       Alert.alert(errorMessage.toString().slice(9));
       setLoading(false);
     });
   };
+  
   useEffect(() => {
     setLoading(true);
-    console.log('loding');
-    const unsubscribe = auth.onAuthStateChanged((authUser) => {
-        if (!authUser) {
-            console.log(auth)
-            setLoading(false);
-            console.log('not logged in');
-        }
-        if (authUser) {
-            navigation.navigate("Home");
-        } 
-    });
+    AsyncStorage.getItem('userCredential')
+    .then(value => {
+      if(value) {
+        // save user in redux store
+        console.log(JSON.parse(value),'this is json value');
+         dispatch(setUser(JSON.parse(value)));
+         setLoading(false);
+         navigation.navigate("Home");
+      } else {
+        // User token not found, continue checking Firebase auth state
+          const unsubscribe = auth.onAuthStateChanged(authUser => {
+            if (!authUser) {
+              setLoading(false);
+              console.log('User not logged in');
+            } else {
+              setLoading(false);
+              navigation.navigate("Home");
+            }
+          });
+          return unsubscribe;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
 
-    return unsubscribe;
-}, []);
+  }, []);
+  
 
   return (
     <SafeAreaView
