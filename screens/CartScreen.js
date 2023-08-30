@@ -27,10 +27,10 @@ const CartScreen = () => {
     .reduce((a, b) => a + b, 0);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const userCredential = useSelector((state) => state.user.userCredential);
 
   const placeOrder = async () => {
     setLoading(true);
-  
     const fullOrderDetails = {
       cart: cart,
       total: total,
@@ -38,8 +38,7 @@ const CartScreen = () => {
       selectedTime: route.params.selectedTime,
       numberOfDays: route.params.numberOfDays,
     };
-    const user = await auth.currentUser.uid;
-
+    const user = userCredential.uid;
     await setDoc(
       doc(db , "users", `${user}`),
       {
@@ -52,6 +51,10 @@ const CartScreen = () => {
       dispatch(cleanCart());
       dispatch(resetProductQuantity());
     })
+    .catch((error) => {
+      setLoading(false);
+      alert(error.message);
+    });
     
   };
 
@@ -60,7 +63,7 @@ const CartScreen = () => {
       {
         loading ? (
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size="large" color="red" />
+            <ActivityIndicator size="large" color="blue" />
           </View>
 
         ) : (
@@ -273,7 +276,7 @@ const CartScreen = () => {
                       >
                         <Text style={styles.defText}>Time of pick up</Text>
                         <Text
-                          style={{ fontSize: 17, fontWeight: "300", color: "skyblue" }}
+                          style={{ fontSize: 17, fontWeight: "400", color: "skyblue" }}
                         >
                           {route.params.selectedTime}
                         </Text>
