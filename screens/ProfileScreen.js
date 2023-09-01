@@ -5,23 +5,25 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "@expo/vector-icons";
 import { areYouSure } from './Reusable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { cleanCart } from '../redux/CartReducer';
 
 
 const ProfileScreen = () => {
     const user = useSelector(state => state.user.userCredential);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
+    const dispatch = useDispatch();
     const logout = async () => {
-        console.log("logout");
         // call the alert function
         const r =  await areYouSure("Logout", "Are you sure you want to logout?");
-        console.log(r);
         if (!r) {
             setLoading(false);
             return;
         } else {
             setLoading(true);
+            // empty cart
+            dispatch(cleanCart());
             auth.signOut().then(() => {
                 AsyncStorage.removeItem('userCredential');
                 console.log("User logged out successfully");
