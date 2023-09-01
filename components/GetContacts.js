@@ -25,13 +25,13 @@ const GetContacts = () => {
       const { status } = await Contacts.requestPermissionsAsync();
 
       if (status === "granted") {
-        console.log("Contacts permission granted");
+        // console.log("Contacts permission granted");
         loadContacts();
       } else {
-        console.log("Contacts permission denied");
+        // console.log("Contacts permission denied");
       }
     } catch (error) {
-      console.error("Error requesting contacts permission:", error);
+      // console.error("Error requesting contacts permission:", error);
     }
   };
 
@@ -90,7 +90,7 @@ const GetContacts = () => {
       return isIt;
     };
     if (checkContacStored()) {
-      console.log("asyncStorage contacts stored");
+      // console.log("asyncStorage contacts stored");
     } else {
       requestContactsPermission();
       storeContacts();

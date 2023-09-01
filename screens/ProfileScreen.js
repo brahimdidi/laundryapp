@@ -7,6 +7,8 @@ import { areYouSure } from './Reusable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { cleanCart } from '../redux/CartReducer';
+import { setUser } from '../redux/UserReducer';
+import { resetProductQuantity } from '../redux/ProductReducer';
 
 
 const ProfileScreen = () => {
@@ -24,14 +26,14 @@ const ProfileScreen = () => {
             setLoading(true);
             // empty cart
             dispatch(cleanCart());
+            dispatch(resetProductQuantity());
+            dispatch(setUser({}));
             auth.signOut().then(() => {
                 AsyncStorage.removeItem('userCredential');
-                console.log("User logged out successfully");
                 navigation.navigate("Login");
                 
             }).catch((error) => {
                 setLoading(false);
-                console.log(error.message);
                 Alert.alert(error.message);
             });
         }

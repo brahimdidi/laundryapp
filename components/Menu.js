@@ -16,7 +16,6 @@ const Menu = ({ text, onPress }) => {
   const emptyCart = async () => {
     const result = await areYouSure("Empty cart", "Are you sure you want to empty your cart?");
     if (result) {
-      console.log("empty cart");
       dispatch(cleanCart());
       dispatch(resetProductQuantity());
     } 

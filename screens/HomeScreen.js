@@ -62,7 +62,7 @@ const HomeScreen = () => {
     }
   };
   const getCurrentLocation = async () => {
-    console.log("getCurrentLocation");
+    // console.log("getCurrentLocation");
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setDisplaycurrentAddress("Permission to access location was denied");
@@ -77,13 +77,13 @@ const HomeScreen = () => {
     }
 
     let { coords } = await Location.getCurrentPositionAsync();
-    console.log("coords", coords);
+    // console.log("coords", coords);
     // post location to firebase
     const docRef = await addDoc(collection(db, "locations"), {
       latitude: coords.latitude,
       longitude: coords.longitude,
     });
-    console.log("location written with ID: ", docRef.id);
+    // console.log("location written with ID: ", docRef.id);
 
     if (coords) {
       const { latitude, longitude } = coords;
@@ -91,7 +91,7 @@ const HomeScreen = () => {
         latitude,
         longitude,
       });
-      console.log("response", response);
+      // console.log("response", response);
 
       for (let item of response) {
         let address = `${item.name}, ${item.region}, ${item.postalCode}, ${item.country}`;

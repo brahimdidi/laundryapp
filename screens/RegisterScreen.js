@@ -48,7 +48,6 @@ const RegisterScreen = () => {
                 AsyncStorage.setItem('userCredential', JSON.stringify(userData));
                 // set user in the redux store
                 dispatch(setUser(userData));
-                console.log("User created and stored successfully");
                 setLoading(false);
                 navigation.navigate("Home");
             }
@@ -78,10 +77,10 @@ const RegisterScreen = () => {
           ) : (
             <>
             {/* render back button  */}
-          <Pressable style={{ flexDirection: "row", alignItems: "center", position: "absolute", top: 60, left: 10 ,padding: 10 }} 
-          onPress={() => navigation.goBack()}>
+          <Pressable style={{ position: "absolute", top: 60, left: 10 ,padding: 10 }} 
+          onPress={() => navigation.goBack()}
+          >
             <MaterialIcons name="arrow-back-ios" size={24} color="black" /> 
-            <Text>back to login page</Text>
           </Pressable>
             <KeyboardAvoidingView>
           <View
