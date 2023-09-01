@@ -13,7 +13,8 @@ import HorizontalDatepicker from "@awrminkhodaei/react-native-horizontal-datepic
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { setPreferences, setPreviousPreferences } from "../redux/PreviousPreferencesReducer";
+import { setPreferences } from "../redux/PreviousPreferencesReducer";
+import Menu from "../components/Menu";
 
 const PickUpScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -212,30 +213,7 @@ const PickUpScreen = () => {
           ))}
         </ScrollView>
       </SafeAreaView>
-      <Pressable
-        onPress={() => proceedToCart()}
-        style={styles.proceedToPickUpContainer}
-      >
-        <View>
-          <Text style={styles.proceedToPickUpText}>
-            {cart.length} items | ${total}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "400",
-              color: "white",
-              marginVertical: 6,
-            }}
-          >
-            extra charges might apply
-          </Text>
-        </View>
-        
-          <Text style={{ fontSize: 17, fontWeight: "600" }}>
-            Proceed to Cart
-          </Text>
-      </Pressable>
+      <Menu onPress={proceedToCart} text="proceed to cart" />
     </>
   );
 };
