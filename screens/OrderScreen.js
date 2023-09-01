@@ -13,11 +13,11 @@ const OrderScreen = () => {
       {/* render back button */}
       <Pressable
         style={{ flexDirection: "row", alignItems: "center", padding: 10 }}
+        onPress={() => navigation.navigate("Home")}
       >
         <MaterialIcons
           name="arrow-back-ios"
           size={24}
-          onPress={() => navigation.navigate("Home")}
         />
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>
           Go back to home
