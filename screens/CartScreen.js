@@ -16,7 +16,8 @@ import {
   resetProductQuantity,
 } from "../redux/ProductReducer";
 import {  doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { db } from "../firebase";
+import Menu from "../components/Menu";
 
 const CartScreen = () => {
   const route = useRoute();
@@ -63,6 +64,7 @@ const CartScreen = () => {
       {
         loading ? (
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{marginBottom:20 , fontSize: 20, fontWeight: 'bold'}}>Placing your order...</Text>
             <ActivityIndicator size="large" color="blue" />
           </View>
 
@@ -98,7 +100,7 @@ const CartScreen = () => {
                     {/* list of cart items with option to add or remove quantity */}
                     <ScrollView
                       style={{
-                        maxHeight: 300,
+                        maxHeight: "33%",
                         borderRadius: 4,
                         backgroundColor: "white",
                         marginHorizontal: 10,
@@ -136,7 +138,6 @@ const CartScreen = () => {
                                 flexDirection: "row",
                                 alignItems: "center",
                                 marginHorizontal: 10,
-                                gap: 3,
                                 borderRadius: 5,
                                 borderWidth: 1,
                                 borderColor: "lightgrey",
@@ -219,7 +220,7 @@ const CartScreen = () => {
                         Billing Details
                       </Text>
                       <View
-                        style={{ gap: 5, borderRadius: 7, padding: 10, marginTop: 15 }}
+                        style={{  borderRadius: 7, padding: 10, marginTop: 15 }}
                       >
                         <View style={styles.def}>
                           <Text style={styles.defText}>Number of items</Text>
@@ -308,28 +309,7 @@ const CartScreen = () => {
                 )}
           </SafeAreaView>
           {total > 0 && (
-            <Pressable 
-            onPress={placeOrder}
-            style={styles.proceedToPickUpContainer}
-            >
-              <View>
-                <Text style={styles.proceedToPickUpText}>
-                  {cart.length} items | ${total}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "400",
-                    color: "white",
-                    marginVertical: 6,
-                  }}
-                >
-                  extra charges might apply
-                </Text>
-              </View>
-
-              <Text style={{ fontSize: 17, fontWeight: "600" }}>Place Order</Text>
-            </Pressable>
+           <Menu text="Place Order" onPress={placeOrder} />
           )}  
         </>
         )
