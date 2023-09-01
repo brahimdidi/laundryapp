@@ -2,9 +2,14 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, decrementQuantity } from "../redux/CartReducer";
-import { decrementProductQuantity, incrementProductQuantity } from "../redux/ProductReducer";
+import {
+  decrementProductQuantity,
+  incrementProductQuantity,
+} from "../redux/ProductReducer";
+import { useNavigation } from "@react-navigation/native";
 
 const Product = ({ item }) => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart) || [];
 
@@ -22,48 +27,51 @@ const Product = ({ item }) => {
   };
 
   return (
-    <View>
-      <Pressable style={styles.productContainer}>
-        <View>
-          <Image source={{ uri: item.img }} style={{ width: 70, height: 70 }} />
-        </View>
-        <View>
-          <Text style={styles.productName}>{item.name}</Text>
-          <Text>$ {item.price}</Text>
-        </View>
+    <Pressable 
+    style={styles.productContainer}
+    onPress={() => navigation.navigate("ProductItem", { item })}
+    >
+      <View>
+        <Image source={{ uri: item.img }} style={{ width: 70, height: 70 }} />
+      </View>
+      <View>
+        <Text style={styles.productName}>{item.name}</Text>
+        <Text>$ {item.price}</Text>
+      </View>
 
-        {cart.find((product) => product.id === item.id) ? (
-          <Pressable style={styles.cardIncludesPressable}>
-            <Pressable 
+      {cart.find((product) => product.id === item.id) ? (
+        <View style={styles.cardIncludesPressable}>
+          <Pressable
             onPress={decrement}
-            style={styles.cardIncludesPressableChild}>
-              <Text style={styles.cardIncludesPressableChildText}>-</Text>
-            </Pressable>
-            <Pressable>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "#088f8f",
-                  paddingHorizontal: 8,
-                  fontWeight: "600",
-                }}
-              >
-                {item.quantity}
-              </Text>
-            </Pressable>
-            <Pressable 
-             onPress={increment}
-             style={styles.cardIncludesPressableChild}>
-              <Text style={styles.cardIncludesPressableChildText}>+</Text>
-            </Pressable>
+            style={styles.cardIncludesPressableChild}
+          >
+            <Text style={styles.cardIncludesPressableChildText}>-</Text>
           </Pressable>
-        ) : (
-          <Pressable onPress={addItemToCart} style={{ width: 80 }}>
-            <Text style={styles.buyBtn}>Add </Text>
+          <Pressable>
+            <Text
+              style={{
+                fontSize: 20,
+                color: "#088f8f",
+                paddingHorizontal: 8,
+                fontWeight: "600",
+              }}
+            >
+              {item.quantity}
+            </Text>
           </Pressable>
-        )}
-      </Pressable>
-    </View>
+          <Pressable
+            onPress={increment}
+            style={styles.cardIncludesPressableChild}
+          >
+            <Text style={styles.cardIncludesPressableChildText}>+</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <Pressable onPress={addItemToCart} style={{ width: 80 }}>
+          <Text style={styles.buyBtn}>Add </Text>
+        </Pressable>
+      )}
+    </Pressable>
   );
 };
 
