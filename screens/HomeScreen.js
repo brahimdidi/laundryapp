@@ -16,13 +16,13 @@ import Carousel from "../components/Carousel";
 import Services from "../components/Services";
 import Product from "../components/Product";
 import { useDispatch, useSelector } from "react-redux";
-import { resetProductQuantity, setProducts } from "../redux/ProductReducer";
+import { setProducts } from "../redux/ProductReducer";
 import { useNavigation } from "@react-navigation/core";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import GetContacts from "../components/GetContacts";
-import { areYouSure } from "./Reusable";
-import { cleanCart } from "../redux/CartReducer";
+import Menu from "../components/Menu";
+import { proceedToPickUpContainer } from "../styles";
 
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -38,7 +38,6 @@ const HomeScreen = () => {
   const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   // set products based on whether the user is searching or not
-
 
   const originalProductsArray = useSelector((state) => state.product.product);
   if (searchQuery.length > 0) {
@@ -110,14 +109,7 @@ const HomeScreen = () => {
     });
     dispatch(setProducts(products));
   };
-  const emptyCart = async () => {
-    const result = await areYouSure("Empty cart", "Are you sure you want to empty your cart?");
-    if (result) {
-      console.log("empty cart");
-      dispatch(cleanCart());
-      dispatch(resetProductQuantity());
-    } 
-  };
+  
 
   useEffect(() => {
     checkIfLocationEnabled();
@@ -219,105 +211,14 @@ const HomeScreen = () => {
           ))
         )}
       </ScrollView>
-      {total > 0 && (
-        <View style={styles.proceedToPickUpContainer}>
-          <View style={styles.proceedToPickUpHalf}>
-            <Text style={styles.proceedToPickUpText}>
-              {
-                cart.map((item) => item.quantity).reduce((a, b) => a + b, 0)
-              } items | ${total}
-            </Text>
-            <Text
-              style={{
-                padding: 10,
-                borderBottomWidth: 1,
-                fontSize: 12,
-              }}
-            >
-              extra charges might apply
-            </Text>
-          </View>
-          <View style={ 
-            [
-              styles.proceedToPickUpHalf,
-              { backgroundColor: "white", borderTopRightRadius: 7, borderBottomRightRadius: 7}
-            ]
-            
-
-            }>
-            <Pressable
-              onPress={() => navigation.navigate("PickUp")}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
-                padding: 10,
-                borderBottomWidth: 1,
-              }}
-            >
-              <Text style={{ fontSize: 17, fontWeight: "600" }}>
-                Proceed to pick up
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                emptyCart();
-              }}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
-                padding: 10,
-              }}
-            >
-              <Text style={{ fontSize: 17, fontWeight: "600", color: "red" }}>
-                Empty cart
-              </Text>
-              <EvilIcons
-                
-                name="trash"
-                size={26}
-                color="red"
-              />
-            </Pressable>
-          </View>
-        </View>
+      {(total > 0 && searchQuery.length === 0) && (
+         <Menu text= "Proceed to pick up" onPress={() => navigation.navigate('PickUp')} />
       )}
     </>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  proceedToPickUpContainer: {
-    marginBottom: 30,
-    margin: 15,
-    padding: 0,
-    borderRadius: 7,
-    flexDirection: "row",
-    gap: "5%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#088f8f",
-    maxWidth: "95%",
-    maxHeight: "18%",
-  },
-  proceedToPickUpText: {
-    fontSize: 17,
-    fontWeight: "600",
-    color: "white",
-    padding: 10,
-    borderBottomWidth: 1,
-  },
-  proceedToPickUpHalf: {
-    flexDirection: "column",
-    flex: 1,
-    padding: 1,
-    gap: 2,
-    width: "40%",
-  },
-});
 
 // search products method
 const searchProducts = (products, text) => {
